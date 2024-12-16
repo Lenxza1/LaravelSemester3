@@ -7,7 +7,11 @@ use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
-    public function login (Request $request){
+    public function index(){
+        return view('v_login.login');
+    }
+
+    public function login (Request $request){ 
         $credentials = $request->validate(
             [
                 'email' => 'required|email',
@@ -16,16 +20,9 @@ class LoginController extends Controller
         );
 
         if (Auth::attempt($credentials)){
-            if (Auth::user()->role == 'admin'){
-                $request->session()->regenerate();
-                return redirect()->route('admin.dashboard')->with(['title', 'Dashboard']);
-            } else if (Auth::user()->role == 'staff'){
-                $request->session()->regenerate();
-                return redirect()->route('staff.dashboard');
-            } else {
-                $request->session()->regenerate();
-                return redirect()->route('user.dashboard');
-            }
+            $request->session()->regenerate();
+            $request->session()->put('title', 'Dashboard');
+            return redirect()->route('dashboard')->with('title', 'Dashboard');
         }
 
         return back()->with('loginError', 'Login failed, please check your credentials');
@@ -35,6 +32,6 @@ class LoginController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect()->route('loginPage');
+        return redirect(route('loginPage'));
     }
 }
