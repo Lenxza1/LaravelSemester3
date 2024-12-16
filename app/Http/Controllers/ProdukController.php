@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ImageHelper;
+use App\Models\Produk;
 use Illuminate\Http\Request;
 
 class ProdukController extends Controller
@@ -11,7 +13,12 @@ class ProdukController extends Controller
      */
     public function index()
     {
-        //
+        $product = Produk::orderBy('updated_at', 'desc')->get();
+
+        return view('v_produk.index', [
+            'title' => 'Produk',
+            'products' => $product,
+        ]);
     }
 
     /**
@@ -19,7 +26,9 @@ class ProdukController extends Controller
      */
     public function create()
     {
-        //
+        return view('v_produk.create', [
+            'title' => 'Tambah Produk',
+        ]);
     }
 
     /**
@@ -27,7 +36,31 @@ class ProdukController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $request->validate([
+                'name' => 'required|max:255',
+                'price' => 'required|numeric',
+                'amount' => 'required|numeric',
+                'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:10240',
+            ]);
+    
+            $image = $request->file('image');
+            $fileName = time() . '.' . $image->getClientOriginalExtension();
+            $directory = '/img/produk';
+
+            $savedImage = ImageHelper::uploadAndResize($image, $directory, $fileName, height: 300);
+            
+            Produk::create([
+                'name' => $request->name,
+                'price' => $request->price,
+                'amount' => $request->amount,
+                'image' => $directory . '/' . $savedImage,
+            ]);
+    
+            return redirect()->route('produk.index')->with('success', 'Produk berhasil ditambahkan');
+        } catch (\Throwable $th) {
+            return redirect()->route('produk.index')->with('error', $th->getMessage());
+        }
     }
 
     /**
@@ -43,7 +76,10 @@ class ProdukController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        return view('v_produk.edit', [
+            'title' => 'Edit Produk',
+            'product' => Produk::findOrFail($id),
+        ]);
     }
 
     /**
@@ -51,7 +87,47 @@ class ProdukController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        try {
+            $request->validate([
+                'name' => 'required|max:255',
+                'price' => 'required|numeric',
+                'amount' => 'required|numeric',
+                'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:10240',
+            ]);
+    
+            $product = Produk::findOrFail($id);
+    
+            $image = $request->file('image');
+            $fileName = time() . '.' . $image->getClientOriginalExtension();
+            $directory = '/img/produk';
+
+            if ($product->image) {
+                $oldImage = public_path($product->image);
+                if (file_exists($oldImage)) {
+                    unlink($oldImage);
+                }
+            }
+    
+            if ($image) {
+                $savedImage = ImageHelper::uploadAndResize($image, $directory, $fileName, height: 300);
+                $product->update([
+                    'name' => $request->name,
+                    'price' => $request->price,
+                    'amount' => $request->amount,
+                    'image' => $directory . '/' . $savedImage,
+                ]);
+            } else {
+                $product->update([
+                    'name' => $request->name,
+                    'price' => $request->price,
+                    'amount' => $request->amount,
+                ]);
+            }
+    
+            return redirect()->route('produk.index')->with('success', 'Produk berhasil diubah');
+        } catch (\Throwable $th) {
+            return redirect()->route('produk.index')->with('error', $th->getMessage());
+        }
     }
 
     /**
@@ -59,6 +135,17 @@ class ProdukController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $product = Produk::findOrFail($id);
+            $image = public_path($product->image);
+            if (file_exists($image)) {
+                unlink($image);
+            }
+            $product->delete();
+    
+            return redirect()->route('produk.index')->with('success', 'Produk berhasil dihapus');
+        } catch (\Throwable $th) {
+            return redirect()->route('produk.index')->with('error', $th->getMessage());
+        }
     }
 }

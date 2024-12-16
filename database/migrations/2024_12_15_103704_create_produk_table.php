@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('produk', function (Blueprint $table) {
-            $table->id()->primary()->autoIncrement();
+        Schema::create('products', function (Blueprint $table) {
+            $table->id()->autoIncrement();
             $table->string('name', 100);
             $table->integer('amount');
             $table->integer('price');
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('produk');
+        Schema::dropIfExists('products');
     }
 };

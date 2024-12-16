@@ -20,7 +20,7 @@
       <!-- Sidebar scroll-->
       <div>
         <div class="brand-logo d-flex align-items-center justify-content-between">
-          <a href="./index.html" class="text-nowrap logo-img">
+          <a href="{{route('dashboard')}}" class="text-nowrap logo-img">
             <img src="{{ asset('template/assets/images/logos/dark-logo.svg') }}" width="180" alt="" />
           </a>
           <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
@@ -42,50 +42,31 @@
                         <span class="hide-menu">Dashboard</span>
                     </a>
                 </li>
-                @if (Auth::user()->role == 'customer')
-                <li class="sidebar-item">
-                    <a class="sidebar-link" href="#" aria-expanded="false">
-                        <span>
-                            <i class="ti ti-shopping-cart"></i>
-                        </span>
-                        <span class="hide-menu">Order</span>
-                    </a>
-                </li>
-                @endif
                 @if (Auth::user()->role == 'admin' || Auth::user()->role == 'staff')
                 <li class="sidebar-item">
-                    <a class="sidebar-link" href="#" aria-expanded="false">
+                    <a class="sidebar-link" href="{{route('produk.index')}}" aria-expanded="false">
                         <span>
                             <i class="ti ti-building-warehouse"></i>
                         </span>
                         <span class="hide-menu">Produk</span>
                     </a>
                 </li>
+                @endif
                 <li class="sidebar-item">
-                    <a class="sidebar-link" href="#" aria-expanded="false">
+                    <a class="sidebar-link" href="{{route('order.index')}}" aria-expanded="false">
+                        <span>
+                            <i class="ti ti-shopping-cart"></i>
+                        </span>
+                        <span class="hide-menu">Order</span>
+                    </a>
+                </li>
+                @if (Auth::user()->role == 'admin' || Auth::user()->role == 'staff')
+                <li class="sidebar-item">
+                    <a class="sidebar-link" href="{{route('transaksi.index')}}" aria-expanded="false">
                         <span>
                             <i class="ti ti-receipt"></i>
                         </span>
                         <span class="hide-menu">Transaksi</span>
-                    </a>
-                </li>
-                @endif
-                @if (Auth::user()->role == 'admin')
-                <li class="sidebar-item">
-                    <a class="sidebar-link" href="#" aria-expanded="false">
-                        <span>
-                            <i class="fa-solid fa-user-lock"></i>
-                        </span>
-                        <span class="hide-menu">Karyawan</span>
-                    </a>
-                </li>
-                @elseif (Auth::user()->role == 'staff')
-                <li class="sidebar-item">
-                    <a class="sidebar-link" href="#" aria-expanded="false">
-                        <span>
-                            <i class="fa-solid fa-user-lock"></i>
-                        </span>
-                        <span class="hide-menu">Kolega</span>
                     </a>
                 </li>
                 @endif
@@ -153,6 +134,26 @@
   <script src="{{ asset('template/assets/libs/simplebar/dist/simplebar.js') }}"></script>
   <script src="{{ asset('template/assets/js/dashboard.js') }}"></script>
   <script src=" https://cdn.jsdelivr.net/npm/sweetalert2@11.15.0/dist/sweetalert2.all.min.js "></script>
+
+  @if (session('success'))
+    <script>
+      Swal.fire({
+        icon: 'success',
+        title: 'Berhasil',
+        text: '{{session('success')}}',
+      })
+    </script>
+  @endif
+  @if (session('error'))
+    <script>
+      Swal.fire({
+        icon: 'error',
+        title: 'Gagal',
+        text: '{{session('error')}}',
+      })
+    </script>
+  @endif
+  
 </body>
 
 </html>
