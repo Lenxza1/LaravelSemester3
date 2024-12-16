@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title> {{$title}} | Project Akhir</title>
+  <title> {{$title}} | Fruitopia</title>
   <link rel="shortcut icon" type="image/png" href="{{ asset('template/assets/images/logos/favicon.png') }}" />
   <link rel="stylesheet" href="{{ asset('template/assets/css/styles.min.css') }}" />
   <link href=" https://cdn.jsdelivr.net/npm/sweetalert2@11.15.0/dist/sweetalert2.min.css " rel="stylesheet">
