@@ -132,6 +132,8 @@ class OrderController extends Controller
             $order->delete();
 
             return redirect()->route('order.index')->with('success', 'Order berhasil dihapus');
+        } catch (\Illuminate\Database\QueryException $th) {
+            return redirect()->route('order.index')->with('error', 'Tidak Dapat Menghapus Order yang berstatus success');
         } catch (\Throwable $th) {
             return redirect()->route('order.index')->with('error', 'Order gagal dihapus');
         }

@@ -137,13 +137,16 @@ class ProdukController extends Controller
     {
         try {
             $product = Produk::findOrFail($id);
+            $product->delete();
+
             $image = public_path($product->image);
             if (file_exists($image)) {
                 unlink($image);
             }
-            $product->delete();
     
             return redirect()->route('produk.index')->with('success', 'Produk berhasil dihapus');
+        }  catch(\Illuminate\Database\QueryException $e) {                
+            return redirect()->route('produk.index')->with('error', 'Produk tidak bisa dihapus karena sudah ada transaksi yang menggunakan produk ini');
         } catch (\Throwable $th) {
             return redirect()->route('produk.index')->with('error', $th->getMessage());
         }

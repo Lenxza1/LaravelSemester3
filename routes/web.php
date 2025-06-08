@@ -57,7 +57,7 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
         Route::get('/create', [OrderController::class, 'create'])->name('order.create');
         Route::post('/store', [OrderController::class, 'store'])->name('order.store');
         Route::get('/edit/{id}', [OrderController::class, 'edit'])->name('order.edit');
-        Route::put('/update/{id}', [OrderController::class, 'update'])->name('order.update');
+        Route::patch('/update/{id}', [OrderController::class, 'update'])->name('order.update');
         Route::delete('/delete/{id}', [OrderController::class, 'destroy'])->name('order.delete');
     });
 })->middleware('auth');

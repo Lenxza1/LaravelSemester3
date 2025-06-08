@@ -5,7 +5,7 @@
         <h5 class="card-title fw-semibold mb-4">{{$title}}</h5>
         <form method="post" action="{{route('order.update', $order->id)}}">
             @csrf
-            @method('PUT')
+            @method('PATCH')
             <div class="form-group mb-4">
                 <label for="exampleFormControlSelect1" class="form-label">Nama Produk</label>
                 <select class="form-control" id="exampleFormControlSelect1" name="idProduct">

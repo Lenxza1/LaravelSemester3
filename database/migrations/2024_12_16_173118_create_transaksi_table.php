@@ -18,8 +18,8 @@ return new class extends Migration
             $table->integer('total');
             // $table->enum('status', ['pending', 'success', 'cancel']);
             $table->timestamps();
-            $table->foreign('idPetugas')->references('id')->on('users')->noActionOnDelete();
-            $table->foreign('idOrder')->references('id')->on('orders')->noActionOnDelete();
+            $table->foreign('idPetugas')->references('id')->on('users')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreign('idOrder')->references('id')->on('orders')->noActionOnDelete()->noActionOnUpdate();
         });
     }
 
